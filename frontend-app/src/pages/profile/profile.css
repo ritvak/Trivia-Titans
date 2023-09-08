@@ -1,0 +1,123 @@
+.edit-personal-info {
+    max-width: 600px; /* Increase the width of the middle portion */
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .edit-personal-info h2 {
+    text-align: center;
+  }
+  
+  .edit-personal-info form {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    width: 100%;
+  }
+  
+  .edit-personal-info label {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .edit-personal-info input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 100%;
+    max-width: 400px; /* Limiting the width of the input field */
+  }
+  
+  /* Align the email field to the center */
+  .edit-personal-info .email-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .edit-personal-info .email-input input {
+    background-color: #f9f9f9;
+    cursor: not-allowed;
+  }
+  
+  /* Center the button */
+  .edit-personal-info button {
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    display: block;
+  }
+
+  /* Styling for the table container */
+.table-container {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+/* Styling for the table */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Styling for table headers */
+.table th {
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+/* Styling for table cells */
+.table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+.marked-row {
+  background-color: blue;
+  border: 1px solid #933434;
+  /* Add any other styling you want for the marked row */
+}
+.cards-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.card {
+  max-width: 250px;
+  margin: 10px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.card-title {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.card:hover {
+  /* Add any hover styles you want */
+  background-color: #e5e5e5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

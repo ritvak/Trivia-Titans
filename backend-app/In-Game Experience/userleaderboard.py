@@ -1,0 +1,102 @@
+import csv
+import os
+import boto3
+from botocore.exceptions import ClientError
+from google.cloud import storage
+import json
+
+bucketName = 'userleaderboard'
+tableName = 'user_progress'
+secretName = 'userleaderboard'
+regionName = 'us-east-1'
+
+dynamodb = boto3.resource('dynamodb', region_name=regionName)
+table = dynamodb.Table(tableName)
+
+def fetch_data_from_dynamodb():
+    try:
+        response = table.scan()
+        return response['Items']
+    except Exception as e:
+        print('Error fetching data from DynamoDB:', e)
+        raise e
+
+def write_to_csv(data):
+    csv_file = '/tmp/output.csv'
+
+    fieldnames = [
+        'user_id',
+        'games_played',
+        'loss_ratio',
+        'losses',
+        'total_points',
+        'username',
+        'win_loss_ratio',
+        'wins',
+    ]
+
+    try:
+        with open(csv_file, mode='w', newline='') as file:
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(data)
+
+        print(f'Data exported to {csv_file}.')
+        return csv_file
+    except Exception as e:
+        print('Error writing to CSV file:', e)
+        raise e
+
+def get_secret():
+    try:
+        # Create a Secrets Manager client 
+        session = boto3.session.Session()
+        client = session.client(
+            service_name='secretsmanager',
+            region_name=regionName
+        )
+
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secretName
+        )
+    except ClientError as e:
+        # For a list of exceptions thrown, see
+        # https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+        raise e
+
+    # Decrypts secret using the associated KMS key.
+    secret = get_secret_value_response['SecretString']
+    return json.loads(secret)
+
+def upload_to_gcs(csv_file):
+    try:
+        service_account_key = get_secret()
+        storage_client = storage.Client.from_service_account_info(service_account_key)
+        bucket = storage_client.bucket(bucketName)
+        blob = bucket.blob(os.path.basename(csv_file))
+        blob.upload_from_filename(csv_file)
+
+        print(f'File {csv_file} uploaded to Google Cloud Storage.')
+    except Exception as e:
+        print('Error uploading to Google Cloud Storage:', e)
+        raise e
+
+def lambda_handler(event, context):
+    try:
+        data_from_dynamodb = fetch_data_from_dynamodb()
+        csv_file = write_to_csv(data_from_dynamodb)
+        upload_to_gcs(csv_file)
+
+        # Return a response (if needed)
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+            },
+            'body': 'Data exported and uploaded to GCS.'
+        }
+        # Rest of the code...
+    except Exception as e:
+        print('Error:', e)
+        raise e

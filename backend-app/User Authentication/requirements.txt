@@ -1,0 +1,8 @@
+flask
+flask_cors
+flask_session
+firebase_admin
+boto3
+random
+requests
+smtp

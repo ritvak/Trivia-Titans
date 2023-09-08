@@ -1,0 +1,6 @@
+gcloud functions deploy tagQuizQuestions \
+  --runtime=nodejs14 \
+  --trigger-event providers/cloud.firestore/eventTypes/document.create \
+  --trigger-resource 'projects/tagging-392002/databases/(default)/documents/TableQuizQuestions/{questionId}' \
+  --allow-unauthenticated \
+  --project=tagging-392002
